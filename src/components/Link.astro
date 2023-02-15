@@ -1,0 +1,22 @@
+---
+import { getLang } from "..";
+import configuration from "../utils/config";
+import { getLangRegistry } from "./lang-registry";
+
+const { href, language, ...otherProps } = Astro.props;
+
+const targetLang = language || getLang(Astro.url);
+
+const getTransHref = () => {
+  const pageRegistry = getLangRegistry()[href];
+  if (!pageRegistry) return href;
+  return pageRegistry[targetLang] || href;
+};
+
+const translatedHref =
+  targetLang == configuration.canonical ? href : getTransHref();
+---
+
+<a href={translatedHref} {...otherProps}>
+  <slot />
+</a>

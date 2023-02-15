@@ -1,0 +1,51 @@
+---
+import { getLang } from "..";
+import configuration from "../utils/config";
+import { getLangRegistry } from "./lang-registry";
+
+const currentLang = getLang(Astro.url);
+const langRegistry = getLangRegistry();
+const pathname =
+  Astro.url.pathname + (Astro.url.pathname.endsWith("/") ? "" : "/");
+
+const hrefLangs = configuration.lang.map((lang) => {
+  if (lang == currentLang) {
+    return {
+      href: Astro.url,
+      rel: "canonical",
+    };
+  }
+
+  if (currentLang == configuration.canonical) {
+    return {
+      href: Astro.url.origin + langRegistry[pathname][lang],
+      hreflang: lang,
+      rel: "alternate",
+    };
+  }
+
+  const canonical = Object.keys(langRegistry).find(
+    (route) => langRegistry[route][currentLang] == pathname
+  );
+
+  return {
+    href:
+      Astro.url.origin +
+      (lang == configuration.canonical
+        ? canonical
+        : langRegistry[canonical][lang]),
+    hreflang: lang,
+    rel: "alternate",
+  };
+});
+---
+
+{
+  hrefLangs.map((item) =>
+    item.hreflang ? (
+      <link rel={item.rel} hreflang={item.hreflang} href={item.href} />
+    ) : (
+      <link rel={item.rel} href={item.href} />
+    )
+  )
+}
