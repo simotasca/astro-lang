@@ -1,0 +1,15 @@
+---
+import { getLangLink, getUrlInfo } from "../lang";
+
+interface Props {
+  href: string;
+  class?: string;
+}
+
+const { href, class: className } = Astro.props;
+
+const { lang } = getUrlInfo(Astro.url);
+const langHref = getLangLink(href, lang);
+---
+
+<a class={className} href={langHref}><slot /></a>

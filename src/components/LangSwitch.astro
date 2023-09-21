@@ -1,0 +1,28 @@
+---
+import { getUrlInfo } from "../lang";
+import { config } from "../config";
+
+interface Props {
+  lang: string;
+  class?: string;
+}
+
+const { lang, class: className } = Astro.props;
+const { lang: currLang, pathname } = getUrlInfo(Astro.url);
+
+let href = "";
+
+if (lang != currLang) {
+  if (lang == config.canonical || !config.languages.includes(lang)) {
+    // canonical
+    href = pathname;
+  } else {
+    // non canonical
+    href = "/" + lang + pathname;
+  }
+}
+---
+
+<a class={className} href={href}>
+  <slot />
+</a>
