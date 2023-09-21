@@ -1,12 +1,12 @@
 import { join } from "path";
 
 const userConfig = (
-  await import(join(process.cwd(), "lang.config.ts")/* @vite-ignore */).catch(() => ({
-    default: {},
-  }))
+  await import(join(process.cwd(), "lang.config.js") /* @vite-ignore */).catch(
+    () => {
+      return { default: {} };
+    }
+  )
 ).default;
-
-console.log(userConfig);
 
 function parseConfig(userConfig: any) {
   return {

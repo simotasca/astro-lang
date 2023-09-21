@@ -1,5 +1,6 @@
 import { join } from "path";
 import { config } from "./config";
+import { readFile } from "fs/promises";
 
 /**
  * Ottiene il contenuto di un json di traduzione in base a url e lingua.
@@ -31,11 +32,7 @@ export async function getTranslation(url: URL, lang: string) {
 }
 
 async function importJson(path: string) {
-  return (
-    await import(path /* @vite-ignore */).catch(() => {
-      return { default: {} };
-    })
-  )?.default;
+  return JSON.parse((await readFile(path).catch(() => ("{}"))).toString());
 }
 
 function walk(obj: any, key: string) {
