@@ -8,7 +8,10 @@ const userConfig = (
   )
 ).default;
 
-function parseConfig(userConfig: any) {
+function parseConfig(userConfig: any): {
+  canonical: string;
+  languages: string[];
+} {
   return {
     canonical: userConfig.canonical || "en",
     languages: userConfig.languages || ["en"],
