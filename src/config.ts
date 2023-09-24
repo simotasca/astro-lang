@@ -1,12 +1,9 @@
-import { join } from "path";
+import { join } from "node:path";
+import { readFileSync } from "node:fs";
 
-const userConfig = (
-  await import(join(process.cwd(), "lang.config.js") /* @vite-ignore */).catch(
-    () => {
-      return { default: {} };
-    }
-  )
-).default;
+const userConfig = JSON.parse(
+  readFileSync(join(process.cwd(), "lang.config.json")).toString() || "{}"
+);
 
 function parseConfig(userConfig: any): {
   canonical: string;
